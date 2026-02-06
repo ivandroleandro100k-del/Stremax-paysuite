@@ -8,23 +8,30 @@ export default async function handler(req, res) {
 
   try {
 
-    const response = await fetch("https://api.paysuite.com/v1/payment-links", {
+    const response = await fetch("https://paysuite.tech/api/v1/payments", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${process.env.PAYSUITE_API_KEY}`,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Accept": "application/json"
       },
       body: JSON.stringify({
         amount: amount,
-        currency: "BRL",
-        description: `Plano ${plan} - StreamMax`
+        reference: `PLAN_${plan}_${Date.now()}`,
+        description: `Plano ${plan} - StreamMax`,
+        return_url: "https://stremax-paysuite.vercel.app/sucesso",
+        callback_url: "https://stremax-paysuite.vercel.app/api/webhook"
       })
     });
 
     const data = await response.json();
 
+    if (!response.ok) {
+      return res.status(response.status).json(data);
+    }
+
     return res.status(200).json({
-      link: data.payment_url
+      link: data.data.checkout_url
     });
 
   } catch (error) {
