@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreamMax - Sua Plataforma de Streaming Profissional</title>
+</head>
+<body style="font-family: Arial; background:#0f0f12; color:white; text-align:center; padding:50px;">
+
+<h1>StreamMax - Planos</h1>
+
+<button onclick="selectPlan('Starter')" style="padding:15px 25px; margin:10px;">Comprar Starter - R$99</button>
+<button onclick="selectPlan('Professional')" style="padding:15px 25px; margin:10px;">Comprar Professional - R$299</button>
+<button onclick="selectPlan('Enterprise')" style="padding:15px 25px; margin:10px;">Enterprise</button>
+
+<script>
+async function selectPlan(planName) {
+
+    let amount = 0;
+
+    if (planName === "Starter") {
+        amount = 99;
+    } 
+    else if (planName === "Professional") {
+        amount = 299;
+    } 
+    else {
+        alert("Para o plano Enterprise, fale com nosso consultor.");
+        return;
+    }
+
+    try {
+
+        const res = await fetch("/api/criar-pagamento", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                plan: planName,
+                amount: amount
+            })
+        });
+
+        const data = await res.json();
+
+        if (data.link) {
+            window.location.href = data.link;
+        } else {
+            alert("Erro ao gerar pagamento.");
+        }
+
+    } catch (err) {
+        alert("Erro na conexão com o servidor.");
+    }
+}
+</script>
+
+</body>
+</html>
