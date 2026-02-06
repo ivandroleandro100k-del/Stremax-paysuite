@@ -16,11 +16,11 @@ export default async function handler(req, res) {
         "Accept": "application/json"
       },
       body: JSON.stringify({
-        amount: amount,
+        amount: Number(amount),
         reference: `PLAN_${plan}_${Date.now()}`,
         description: `Plano ${plan} - StreamMax`,
-        return_url: "https://stremax-paysuite.vercel.app/sucesso",
-        callback_url: "https://stremax-paysuite.vercel.app/api/webhook"
+        return_url: "https://stremax-paysuite.vercel.app",
+        callback_url: "https://stremax-paysuite.vercel.app"
       })
     });
 
